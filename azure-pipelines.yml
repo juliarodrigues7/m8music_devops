@@ -1,0 +1,66 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  javaVersion: '21'
+
+stages:
+- stage: CI
+  displayName: 'CI - Build e Testes'
+  jobs:
+  - job: Build
+    displayName: 'Build da API M8Music'
+    steps:
+    - task: JavaToolInstaller@0
+      displayName: 'Configurar Java 21'
+      inputs:
+        versionSpec: '21'
+        jdkArchitectureOption: 'x64'
+        jdkSourceOption: 'PreInstalled'
+
+    - task: Maven@3
+      displayName: 'Build com Maven'
+      inputs:
+        mavenPomFile: 'pom.xml'
+        goals: 'clean package -DskipTests'
+        publishJUnitResults: false
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: '1.21'
+        mavenVersionOption: 'Default'
+
+    - task: CopyFiles@2
+      displayName: 'Copiar artefato JAR'
+      inputs:
+        SourceFolder: '$(System.DefaultWorkingDirectory)'
+        Contents: '**/target/*.jar'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publicar artefato'
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'drop'
+        publishLocation: 'Container'
+
+- stage: CD
+  displayName: 'CD - Deploy no Azure App Service'
+  dependsOn: CI
+  condition: succeeded()
+  jobs:
+  - deployment: Deploy
+    displayName: 'Deploy da API'
+    environment: 'production'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureWebApp@1
+            displayName: 'Deploy no App Service'
+            inputs:
+              azureSubscription: 'NOME_DA_SERVICE_CONNECTION'
+              appType: 'webAppLinux'
+              appName: 'm8music-api-julia'
+              package: '$(Pipeline.Workspace)/drop/**/*.jar'
