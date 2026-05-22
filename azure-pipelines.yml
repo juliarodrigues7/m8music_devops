@@ -60,7 +60,7 @@ stages:
           - task: AzureWebApp@1
             displayName: 'Deploy no App Service'
             inputs:
-              azureSubscription: 'NOME_DA_SERVICE_CONNECTION'
+              azureSubscription: 'm8music-azure-connection'
               appType: 'webAppLinux'
               appName: 'm8music-api-julia'
               package: '$(Pipeline.Workspace)/drop/**/*.jar'
