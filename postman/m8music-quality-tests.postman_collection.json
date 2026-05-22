@@ -1,0 +1,295 @@
+{
+  "info": {
+    "_postman_id": "04255a1e-8f5e-4f14-a5de-7c3e7e7012cd",
+    "name": "M8Music - QA Automated Tests",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "55094654",
+    "_collection_link": "https://go.postman.co/collection/55094654-04255a1e-8f5e-4f14-a5de-7c3e7e7012cd?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "TA01 - Cadastrar músico",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code deve ser 200 ou 201\", function () {\r",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Resposta deve estar em JSON\", function () {\r",
+              "    pm.response.to.be.json;\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Resposta deve conter ID do músico\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData).to.have.property(\"id\");\r",
+              "    pm.collectionVariables.set(\"musicoId\", jsonData.id);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Nome do músico deve estar correto\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.nome).to.eql(\"Rafael Lima\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Gênero musical deve estar correto\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.generoMusical).to.eql(\"Samba\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Email do músico deve estar correto\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.email).to.eql(\"rafael@mmusic.com\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"nome\": \"Rafael Lima\",\r\n  \"generoMusical\": \"Samba\",\r\n  \"email\": \"rafael@mmusic.com\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/musicos",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "musicos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "TA02 - Buscar músico por ID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code deve ser 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Resposta deve estar em JSON\", function () {\r",
+              "    pm.response.to.be.json;\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Músico retornado deve ter o mesmo ID salvo\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.id).to.eql(Number(pm.collectionVariables.get(\"musicoId\")));\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Nome do músico deve ser Rafael Lima\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.nome).to.eql(\"Rafael Lima\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Gênero musical deve ser Samba\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.generoMusical).to.eql(\"Samba\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Email do músico deve ser rafael@mmusic.com\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.email).to.eql(\"rafael@mmusic.com\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/musicos/{{musicoId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "musicos",
+            "{{musicoId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "TA03 - Cadastrar evento",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code deve ser 200 ou 201\", function () {\r",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Resposta deve estar em JSON\", function () {\r",
+              "    pm.response.to.be.json;\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Resposta deve conter ID do evento\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData).to.have.property(\"id\");\r",
+              "    pm.collectionVariables.set(\"eventoId\", jsonData.id);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Nome do evento deve estar correto\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.nomeEvento).to.eql(\"Samba Session M8Music\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Local do evento deve estar correto\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.localEvento).to.eql(\"Casa Central\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Data do evento deve estar correta\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.dataEvento).to.eql(\"2026-07-20\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"nomeEvento\": \"Samba Session M8Music\",\r\n  \"localEvento\": \"Casa Central\",\r\n  \"dataEvento\": \"2026-07-20\",\r\n  \"musicoId\": {{musicoId}}\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/eventos",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "eventos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "TA04 - Buscar evento por ID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code deve ser 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Resposta deve estar em JSON\", function () {\r",
+              "    pm.response.to.be.json;\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Evento retornado deve ter o mesmo ID salvo\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.id).to.eql(Number(pm.collectionVariables.get(\"eventoId\")));\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Nome do evento deve ser Samba Session M8Music\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.nomeEvento).to.eql(\"Samba Session M8Music\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Local do evento deve ser Casa Central\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.localEvento).to.eql(\"Casa Central\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Data do evento deve estar correta\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.dataEvento).to.eql(\"2026-07-20\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/eventos/{{eventoId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "eventos",
+            "{{eventoId}}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": ""
+    },
+    {
+      "key": "musicoId",
+      "value": ""
+    },
+    {
+      "key": "eventoId",
+      "value": ""
+    }
+  ]
+}
